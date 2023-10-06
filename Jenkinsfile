@@ -7,7 +7,7 @@ pipeline{
         maven 'Maven3'
     }
     environment {
-        APP_NAME = "DevOps-Jenkins-CI-CD"
+        APP_NAME = "devops-jenkins-ci-cd"
         RELEASE = "1.0.0"
         DOCKER_USER = "sbalavardhan"
         DOCKER_PASS = 'dockerhub'
