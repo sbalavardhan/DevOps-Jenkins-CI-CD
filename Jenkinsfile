@@ -99,12 +99,36 @@ pipeline{
         }
     }
         post {
-        failure {
-              slackSend channel: '#jenkins', color: 'danger', message: '${env.JOB_NAME} - Build # ${env.BUILD_NUMBER} - Failure', teamDomain: 'devops-cicd', tokenCredentialId: 'SLACK-WEBHOOK'
+            failure{
+                script {
+                    // Notify Slack on job completion
+                    slackSend(
+                        color: 'danger',  // You can set 'good', 'warning', or 'danger' for different message colors
+                        message: "Job '${env.JOB_NAME}' (${env.BUILD_NUMBER}) has failed. Result: ${currentBuild.result}",
+                        channel: '#jenkins',
+                        teamDomain: 'devops-cicd',
+                        tokenCredentialId: 'SLACK-WEBHOOK'
+                    )
+                }
             }
-         success {
-               slackSend channel: '#jenkins', color: 'danger', message: '${env.JOB_NAME} - Build # ${env.BUILD_NUMBER} - successfull', teamDomain: 'devops-cicd', tokenCredentialId: 'SLACK-WEBHOOK'
-          }      
+            success{
+                script {
+                    // Notify Slack on job completion
+                    slackSend(
+                        color: 'good',  // You can set 'good', 'warning', or 'danger' for different message colors
+                        message: "Job '${env.JOB_NAME}' (${env.BUILD_NUMBER}) has successful. Result: ${currentBuild.result}",
+                        channel: '#jenkins',
+                        teamDomain: 'devops-cicd',
+                        tokenCredentialId: 'SLACK-WEBHOOK'
+                    )
+                }
+            }
+        // failure {
+        //       slackSend channel: '#jenkins', color: 'danger', message: '${env.JOB_NAME} - Build # ${env.BUILD_NUMBER} - Failure', teamDomain: 'devops-cicd', tokenCredentialId: 'SLACK-WEBHOOK'
+        //     }
+        //  success {
+        //        slackSend channel: '#jenkins', color: 'danger', message: '${env.JOB_NAME} - Build # ${env.BUILD_NUMBER} - successfull', teamDomain: 'devops-cicd', tokenCredentialId: 'SLACK-WEBHOOK'
+        //   }      
     }
-     
+       
 }
