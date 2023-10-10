@@ -97,6 +97,7 @@ pipeline{
             }
 
         }
+    }
         post {
         failure {
               slackSend channel: '#jenkins', color: 'danger', message: '${env.JOB_NAME} - Build # ${env.BUILD_NUMBER} - Failure', teamDomain: 'devops-cicd', tokenCredentialId: 'SLACK-WEBHOOK'
@@ -105,5 +106,5 @@ pipeline{
                slackSend channel: '#jenkins', color: 'danger', message: '${env.JOB_NAME} - Build # ${env.BUILD_NUMBER} - successfull', teamDomain: 'devops-cicd', tokenCredentialId: 'SLACK-WEBHOOK'
           }      
     }
-    }    
+     
 }
