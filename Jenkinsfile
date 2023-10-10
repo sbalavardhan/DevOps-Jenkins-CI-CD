@@ -100,29 +100,26 @@ pipeline{
     }
         post {
             failure{
-                script {
-                    // Notify Slack on job completion
-                    slackSend(
-                        color: 'danger',  // You can set 'good', 'warning', or 'danger' for different message colors
-                        message: "Job '${env.JOB_NAME}' (${env.BUILD_NUMBER}) has failed. Result: ${currentBuild.result}",
-                        channel: '#jenkins',
-                        teamDomain: 'devops-cicd',
-                        tokenCredentialId: 'SLACK-WEBHOOK'
-                    )
+    script {
+               withCredentials([string(credentialsId: 'SLACK-WEBHOOK', variable: 'SLACK-WEBHOOK')]) {
+                 sh """
+                     msg='{"text":"Job ${env.JOB_NAME} (${env.BUILD_NUMBER}) has failed."}'
+                     curl -X POST -H 'Content-type: application/json' --data "${msg}" "${SLACK-WEBHOOK}"
+                    """
                 }
-            }
-            success{
-                script {
-                    // Notify Slack on job completion
-                    slackSend(
-                        color: 'good',  // You can set 'good', 'warning', or 'danger' for different message colors
-                        message: "Job '${env.JOB_NAME}' (${env.BUILD_NUMBER}) has successful. Result: ${currentBuild.result}",
-                        channel: '#jenkins',
-                        teamDomain: 'devops-cicd',
-                        tokenCredentialId: 'SLACK-WEBHOOK'
-                    )
+    }
+}
+
+success{
+    script {
+               withCredentials([string(credentialsId: 'SLACK-WEBHOOK', variable: 'SLACK-WEBHOOK')]) {
+                 sh """
+                     msg='{"text":"Job ${env.JOB_NAME} (${env.BUILD_NUMBER}) has succeded."}'
+                     curl -X POST -H 'Content-type: application/json' --data "${msg}" "${SLACK-WEBHOOK}"
+                    """
                 }
-            }
+    }
+}
         // failure {
         //       slackSend channel: '#jenkins', color: 'danger', message: '${env.JOB_NAME} - Build # ${env.BUILD_NUMBER} - Failure', teamDomain: 'devops-cicd', tokenCredentialId: 'SLACK-WEBHOOK'
         //     }
